@@ -8,7 +8,9 @@
 import Foundation
 
 
-class Market {
-    let marketName:String = "SMI"
-    var quotes:[Quote]? = []
+struct Market {
+    
+    let marketName: String = "SMI"
+    var quotes: [Quote]? = []
+    
 }

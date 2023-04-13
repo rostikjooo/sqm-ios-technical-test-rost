@@ -7,12 +7,25 @@
 
 import Foundation
 
-struct Quote {
-    var symbol:String?
-    var name:String?
-    var currency:String?
-    var readableLastChangePercent:String?
-    var last:String?
-    var variationColor:String?
-    var myMarket:Market?
+// TODO: Quote entity needs clarification: is it has ID? how it's Equatable?
+struct Quote: Codable, Equatable {
+    let symbol: String?
+    let name: String?
+    let currency: String?
+    let readableLastChangePercent: String?
+    let last: String?
+    let variationColor: String?
+    
+    var isFavorite: Bool = false
+    var myMarket: Market?
+    
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.symbol == rhs.symbol &&
+        lhs.name == rhs.name &&
+        lhs.currency == rhs.currency
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case symbol, name, currency, readableLastChangePercent, last, variationColor
+    }
 }

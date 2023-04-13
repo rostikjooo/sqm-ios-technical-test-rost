@@ -7,23 +7,26 @@
 
 import UIKit
 
-class QuoteDetailsViewController: UIViewController {
+final class QuoteDetailsViewController: UIViewController {
+
+    private let symbolLabel = UILabel()
+    private let nameLabel = UILabel()
+    private let lastLabel = UILabel()
+    private let currencyLabel = UILabel()
+    private let readableLastChangePercentLabel = UILabel()
+    private let favoriteButton = UIButton()
     
-    private var quote:Quote? = nil
+    private var quote: Quote!
+    private var didToggleIsFavorite: ((Quote) -> Void)!
     
-    let symbolLabel = UILabel()
-    let nameLabel = UILabel()
-    let lastLabel = UILabel()
-    let currencyLabel = UILabel()
-    let readableLastChangePercentLabel = UILabel()
-    let favoriteButton = UIButton()
+    private var toggleFavoriteButtonText: String {
+        quote.isFavorite ? "Remove from favorites" : "Add to favorites"
+    }
     
-    
-    
-    
-    init(quote:Quote) {
+    init(quote: Quote, didToggleIsFavorite: @escaping (Quote) -> Void) {
         super.init(nibName: nil, bundle: nil)
         self.quote = quote
+        self.didToggleIsFavorite = didToggleIsFavorite
     }
     
     required init?(coder: NSCoder) {
@@ -65,13 +68,16 @@ class QuoteDetailsViewController: UIViewController {
         readableLastChangePercentLabel.layer.borderColor = UIColor.black.cgColor
         readableLastChangePercentLabel.font = .systemFont(ofSize: 30)
         
-        favoriteButton.setTitle("Add to favorites", for: .normal)
+        
+        favoriteButton.setTitle(toggleFavoriteButtonText, for: .normal)
         favoriteButton.layer.cornerRadius = 6
         favoriteButton.layer.masksToBounds = true
         favoriteButton.layer.borderWidth = 3
         favoriteButton.layer.borderColor = UIColor.black.cgColor
         favoriteButton.addTarget(self, action: #selector(didPressFavoriteButton), for: .touchUpInside)
         favoriteButton.setTitleColor(.black, for: .normal)
+        // TODO: check design
+        favoriteButton.contentEdgeInsets = .init(top: 0, left: 12, bottom: 0, right: 12)
         
         
         view.addSubview(symbolLabel)
@@ -121,7 +127,6 @@ class QuoteDetailsViewController: UIViewController {
                         
             favoriteButton.topAnchor.constraint(equalTo: readableLastChangePercentLabel.bottomAnchor, constant: 30),
             favoriteButton.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
-            favoriteButton.widthAnchor.constraint(equalToConstant: 150),
             favoriteButton.heightAnchor.constraint(equalToConstant: 44),
             
         ])
@@ -129,6 +134,9 @@ class QuoteDetailsViewController: UIViewController {
     
     
     @objc func didPressFavoriteButton(_ sender:UIButton!) {
-        // TODO
+        didToggleIsFavorite(self.quote)
+        
+        quote.isFavorite.toggle()
+        favoriteButton.setTitle(toggleFavoriteButtonText, for: .normal)
     }
 }
